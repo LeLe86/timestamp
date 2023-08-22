@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Timestamp Convertor</title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
+     
+
+</head>
+
+<body>
+    <div style="width:100%;background-color: #3265e1;height:60px;
+    margin-bottom: 20px;text-align: center;color:white;font-size: 20px;padding-top: 10px;
+    ">
+    TimeStamp And Normal Time Convertor
+    </div>
+    <div id="mainbody" style="width:600px;margin:0 auto">
+        
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="width: 105px;">Timestamp</span>
+            <input type="text" id="inputstamp" class="form-control" placeholder="10digits" aria-label="inputstamp"
+                aria-describedby="inputstamp">
+            <button type="button" class="btn btn-primary" onclick='convertstamp2time()'>Convert</button>
+            <input type="text" class="form-control" id="outputtime">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text" style="width: 105px;padding-left: 30px;">Time</span>
+            <input type="text" id="inputtime" class="form-control" placeholder="2018-05-30 12:20:12" aria-label="inputstamp"
+                aria-describedby="inputtime">
+            <button type="button" class="btn btn-primary" onclick='converttime2stamp()'>Convert</button>
+            <input type="text" class="form-control" id="outputstamp">
+        </div>
+        <button type="button" class="btn btn-secondary" onclick='zerotime()'>Zerotime</button>
+        <p></p>
+        <textarea style="height:200px;width:500px;" id="showtxt"></textarea>
+
+
+        <button type="button" class="btn btn-success"  >Pro Version</button>
+        
+    </div>
+    <script>
+        function stamp2time(stamp) {
+            let stamp2 = parseInt(stamp);
+            console.log("stamp2", stamp2);
+            // Convert the timestamp to milliseconds
+            let date = new Date(stamp2 * 1000);
+
+            // Add 8 hours (28800000 milliseconds) to the date for the +8 timezone
+            date = new Date(date.getTime() + 28800000); // 8 * 60 * 60 * 1000 = 28800000
+
+            const year = date.getUTCFullYear();
+            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+            const day = String(date.getUTCDate()).padStart(2, '0');
+            const hours = String(date.getUTCHours()).padStart(2, '0');
+            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+
+            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        }
+        function time2stamp(timestr) {
+            // Split the input string into date and time parts
+            const dateParts = timestr.split(' ')[0].split('-');
+            const timeParts = timestr.split(' ')[1].split(':');
+
+            // Extract the components and handle both '01' and '1' formats
+            const year = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed in JS
+            const day = parseInt(dateParts[2], 10);
+            const hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            const seconds = timeParts.length >= 3 ? parseInt(timeParts[2], 10) : 0; // Handle cases where seconds might not be provided
+
+            const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+
+            // Subtract 8 hours (28800000 milliseconds) from the date for the +8 timezone
+            const adjustedDate = new Date(date.getTime() - 28800000); // 8 * 60 * 60 * 1000 = 28800000
+
+            // Return the UNIX timestamp (in seconds)
+            return Math.floor(adjustedDate.getTime() / 1000);
+        }
+        function time2zerotime(timestr){
+            // Split the input string into date and time parts
+            const dateParts = timestr.split(' ')[0].split('-');
+            const timeParts = timestr.split(' ')[1].split(':');
+
+            // Extract the components and handle both '01' and '1' formats
+            const year = dateParts[0];
+            const month = dateParts[1].padStart(2, '0') ; // Months are 0-indexed in JS
+            const day = dateParts[2].padStart(2, '0');
+            
+ 
+
+            let zerotime = `${year}-${month}-${day} 00:00:00`;
+            return zerotime;
+        }
+
+  
+    </script>
+
+
+    <script>
+        let arr = [];
+        function convertstamp2time() {
+            let inputstamp = $("#inputstamp").val();
+            let output = stamp2time(inputstamp);
+            console.log(inputstamp, "->>", output);
+            $("#outputtime").val(output);
+            let s = inputstamp+" -> " +output;
+            addrec(s);
+        }
+        function converttime2stamp(){
+            let inputtime = $("#inputtime").val();
+            let output = time2stamp(inputtime);
+            console.log(inputtime, "->>", output);
+            $("#outputstamp").val(output);
+            let s = inputtime+" -> " +output;
+            addrec(s);
+        }
+        function zerotime(){
+            let inputtime = $("#inputtime").val();
+            let zerotime = time2zerotime(inputtime);
+            $("#inputtime").val(zerotime);
+            converttime2stamp();
+        }
+        function addrec(s){
+            arr.push(s);
+            showrec();
+        }
+        function showrec(){
+            let newarr = [...arr].reverse();
+            let msgstr = newarr.join("\n");
+            console.log(msgstr);
+            $("#showtxt").val(msgstr);
+        }
+         
+    </script>
+
+</body>
+
+</html>
