@@ -1,145 +1,308 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Timestamp Convertor</title>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" rel="stylesheet">
-     
+    <link
+      href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-</head>
-
-<body  onload="onLoadHandler()">
-    <div style="width:100%;background-color: #3265e1;height:60px;
-    margin-bottom: 20px;text-align: center;color:white;font-size: 20px;padding-top: 10px;
-    ">
-    TimeStamp And Normal Time Convertor
+  <body onload="onLoadHandler()">
+    <div
+      style="
+        width: 100%;
+        background-color: #3265e1;
+        height: 60px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: white;
+        font-size: 20px;
+        padding-top: 10px;
+      "
+    >
+      TimeStamp And Normal Time Convertor
     </div>
-    <div id="mainbody" style="width:600px;margin:0 auto">
-        
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 105px;">Timestamp</span>
-            <input type="text" id="inputstamp" class="form-control" placeholder="10digits" aria-label="inputstamp"
-                aria-describedby="inputstamp">
-            <button type="button" class="btn btn-primary" onclick='convertstamp2time()'>Convert</button>
-            <input type="text" class="form-control" id="outputtime">
-        </div>
-        <div class="input-group mb-3">
-            <span class="input-group-text" style="width: 105px;padding-left: 30px;">Time</span>
-            <input type="text" id="inputtime" class="form-control" placeholder="2018-05-30 12:20:12" aria-label="inputstamp"
-                aria-describedby="inputtime" value="2023-10-10 12:20:12">
-            <button type="button" class="btn btn-primary" onclick='converttime2stamp()'>Convert</button>
-            <input type="text" class="form-control" id="outputstamp">
-        </div>
-        <button type="button" class="btn btn-secondary" onclick='zerotime()'>Zerotime</button>
-        <p></p>
-        <textarea style="height:200px;width:500px;" id="showtxt"></textarea>
+    <div id="mainbody" style="width: 600px; margin: 0 auto">
+      <div class="input-group mb-3">
+        <span class="input-group-text" style="width: 105px">Timestamp</span>
+        <input
+          type="text"
+          id="inputstamp"
+          class="form-control"
+          placeholder="10digits"
+          aria-label="inputstamp"
+          aria-describedby="inputstamp"
+        />
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="convertstamp2time()"
+        >
+          Convert
+        </button>
+        <input type="text" class="form-control" id="outputtime" />
+      </div>
+      <div class="input-group mb-3">
+        <span class="input-group-text" style="width: 105px; padding-left: 30px"
+          >Time</span
+        >
+        <input
+          type="text"
+          id="inputtime"
+          class="form-control"
+          placeholder="2018-05-30 12:20:12"
+          aria-label="inputstamp"
+          aria-describedby="inputtime"
+          value="2023-10-10 12:20:12"
+        />
+        <button
+          type="button"
+          class="btn btn-primary"
+          onclick="converttime2stamp()"
+        >
+          Convert
+        </button>
+        <input type="text" class="form-control" id="outputstamp" />
+      </div>
+      <button type="button" class="btn btn-secondary" onclick="zerotime()">
+        Zerotime
+      </button>
+      <p></p>
+      <textarea style="height: 200px; width: 500px" id="showtxt"></textarea>
 
-
-        <button type="button" class="btn btn-success"  >Pro Version</button>
-        
+      <button type="button" class="btn btn-success">Pro Version</button>
     </div>
+
+    <div
+      style="
+        width: 700px;
+        margin: 20px auto;
+        display: flex;
+        justify-content: space-between;
+      "
+    >
+      <div style="width: 330px" style="margin-right: 10px">
+        <input type="text" class="form-control" />
+        <textarea style="height: 200px; width: 320px" id="leftlist"></textarea>
+      </div>
+      <div style="width: 330px">
+        <input type="text" class="form-control" />
+        <textarea style="height: 200px; width: 320px" id="rightlist"></textarea>
+      </div>
+    </div>
+    <div
+      style="
+        width: 1000px;
+        margin: 20px auto;
+        display: flex;
+        flex-direction: column;
+      "
+    >
+      <div style="display: flex">
+        <div style="width: 230px" style="margin-right: 10px">
+          左右的交集 <span id="jiaojispan"></span>
+          <textarea style="height: 200px; width: 230px" id="jiaoji"></textarea>
+        </div>
+        <div style="width: 230px" style="margin-right: 10px">
+          左边独有 <span id="lefthavespan"></span>
+          <textarea
+            style="height: 200px; width: 230px"
+            id="lefthave"
+          ></textarea>
+        </div>
+        <div style="width: 230px" style="margin-right: 10px">
+          右边独有 <span id="righthavespan"></span>
+          <textarea
+            style="height: 200px; width: 230px"
+            id="righthave"
+          ></textarea>
+        </div>
+        <div style="width: 230px" style="margin-right: 10px">
+          合集 <span id="hejispan"></span>
+          <textarea style="height: 200px; width: 230px" id="heji"></textarea>
+        </div>
+      </div>
+        <div style="margin: 0 auto;">
+        <button
+            type="button"
+            class="btn btn-primary"
+            onclick="calculateSetOperations()"
+            style="width: 150px; margin: 0 auto"
+        >
+            计算
+        </button> 
+            <input type="checkbox" id="addquote" >加引号和逗号</input>
+        </div>
+    </div>
+
     <script>
-        function stamp2time(stamp) {
-            let stamp2 = parseInt(stamp);
-            console.log("stamp2", stamp2);
-            // Convert the timestamp to milliseconds
-            let date = new Date(stamp2 * 1000);
+      function stamp2time(stamp) {
+        let stamp2 = parseInt(stamp);
+        console.log("stamp2", stamp2);
+        // Convert the timestamp to milliseconds
+        let date = new Date(stamp2 * 1000);
 
-            // Add 8 hours (28800000 milliseconds) to the date for the +8 timezone
-            date = new Date(date.getTime() + 28800000); // 8 * 60 * 60 * 1000 = 28800000
+        // Add 8 hours (28800000 milliseconds) to the date for the +8 timezone
+        date = new Date(date.getTime() + 28800000); // 8 * 60 * 60 * 1000 = 28800000
 
-            const year = date.getUTCFullYear();
-            const month = String(date.getUTCMonth() + 1).padStart(2, '0');
-            const day = String(date.getUTCDate()).padStart(2, '0');
-            const hours = String(date.getUTCHours()).padStart(2, '0');
-            const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-            const seconds = String(date.getUTCSeconds()).padStart(2, '0');
+        const year = date.getUTCFullYear();
+        const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const hours = String(date.getUTCHours()).padStart(2, "0");
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+        const seconds = String(date.getUTCSeconds()).padStart(2, "0");
 
-            return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
-        function time2stamp(timestr) {
-            // Split the input string into date and time parts
-            const dateParts = timestr.split(' ')[0].split('-');
-            const timeParts = timestr.split(' ')[1].split(':');
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+      function time2stamp(timestr) {
+        // Split the input string into date and time parts
+        const dateParts = timestr.split(" ")[0].split("-");
+        const timeParts = timestr.split(" ")[1].split(":");
 
-            // Extract the components and handle both '01' and '1' formats
-            const year = parseInt(dateParts[0], 10);
-            const month = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed in JS
-            const day = parseInt(dateParts[2], 10);
-            const hours = parseInt(timeParts[0], 10);
-            const minutes = parseInt(timeParts[1], 10);
-            const seconds = timeParts.length >= 3 ? parseInt(timeParts[2], 10) : 0; // Handle cases where seconds might not be provided
+        // Extract the components and handle both '01' and '1' formats
+        const year = parseInt(dateParts[0], 10);
+        const month = parseInt(dateParts[1], 10) - 1; // Months are 0-indexed in JS
+        const day = parseInt(dateParts[2], 10);
+        const hours = parseInt(timeParts[0], 10);
+        const minutes = parseInt(timeParts[1], 10);
+        const seconds = timeParts.length >= 3 ? parseInt(timeParts[2], 10) : 0; // Handle cases where seconds might not be provided
 
-            const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+        const date = new Date(
+          Date.UTC(year, month, day, hours, minutes, seconds)
+        );
 
-            // Subtract 8 hours (28800000 milliseconds) from the date for the +8 timezone
-            const adjustedDate = new Date(date.getTime() - 28800000); // 8 * 60 * 60 * 1000 = 28800000
+        // Subtract 8 hours (28800000 milliseconds) from the date for the +8 timezone
+        const adjustedDate = new Date(date.getTime() - 28800000); // 8 * 60 * 60 * 1000 = 28800000
 
-            // Return the UNIX timestamp (in seconds)
-            return Math.floor(adjustedDate.getTime() / 1000);
-        }
-        function time2zerotime(timestr){
-            // Split the input string into date and time parts
-            const dateParts = timestr.split(' ')[0].split('-');
-            const timeParts = timestr.split(' ')[1].split(':');
+        // Return the UNIX timestamp (in seconds)
+        return Math.floor(adjustedDate.getTime() / 1000);
+      }
+      function time2zerotime(timestr) {
+        // Split the input string into date and time parts
+        const dateParts = timestr.split(" ")[0].split("-");
+        const timeParts = timestr.split(" ")[1].split(":");
 
-            // Extract the components and handle both '01' and '1' formats
-            const year = dateParts[0];
-            const month = dateParts[1].padStart(2, '0') ; // Months are 0-indexed in JS
-            const day = dateParts[2].padStart(2, '0');
-            
- 
+        // Extract the components and handle both '01' and '1' formats
+        const year = dateParts[0];
+        const month = dateParts[1].padStart(2, "0"); // Months are 0-indexed in JS
+        const day = dateParts[2].padStart(2, "0");
 
-            let zerotime = `${year}-${month}-${day} 00:00:00`;
-            return zerotime;
-        }
+        let zerotime = `${year}-${month}-${day} 00:00:00`;
+        return zerotime;
+      }
 
-  
-
-	function onLoadHandler() {
+      function onLoadHandler() {
         var timestamp = Date.now();
-        $("#inputtime").val(stamp2time(timestamp/1000));
+        $("#inputtime").val(stamp2time(timestamp / 1000));
       }
     </script>
     <script>
-        let arr = [];
-        function convertstamp2time() {
-            let inputstamp = $("#inputstamp").val();
-            let output = stamp2time(inputstamp);
-            console.log(inputstamp, "->>", output);
-            $("#outputtime").val(output);
-            let s = inputstamp+" -> " +output;
-            addrec(s);
+      let arr = [];
+      function convertstamp2time() {
+        let inputstamp = $("#inputstamp").val();
+        let output = stamp2time(inputstamp);
+        console.log(inputstamp, "->>", output);
+        $("#outputtime").val(output);
+        let s = inputstamp + " -> " + output;
+        addrec(s);
+      }
+      function converttime2stamp() {
+        let inputtime = $("#inputtime").val();
+        let output = time2stamp(inputtime);
+        console.log(inputtime, "->>", output);
+        $("#outputstamp").val(output);
+        let s = inputtime + " -> " + output;
+        addrec(s);
+      }
+      function zerotime() {
+        let inputtime = $("#inputtime").val();
+        let zerotime = time2zerotime(inputtime);
+        $("#inputtime").val(zerotime);
+        converttime2stamp();
+      }
+      function addrec(s) {
+        arr.push(s);
+        showrec();
+      }
+      function showrec() {
+        let newarr = [...arr].reverse();
+        let msgstr = newarr.join("\n");
+        console.log(msgstr);
+        $("#showtxt").val(msgstr);
+      }
+
+      // 获取 textarea 元素
+      const leftList = document.getElementById("leftlist");
+      const rightList = document.getElementById("rightlist");
+      const jiaoji = document.getElementById("jiaoji");
+      const lefthave = document.getElementById("lefthave");
+      const righthave = document.getElementById("righthave");
+      const heji = document.getElementById("heji");
+
+      // 获取用于显示数量的 span 元素
+      const jiaojispanElement = document.getElementById("jiaojispan");
+      const lefthavespanElement = document.getElementById("lefthavespan");
+      const righthavespanElement = document.getElementById("righthavespan");
+      const hejispanElement = document.getElementById("hejispan");
+
+      function list2txt(inputlist ) {
+
+        let addquote = document.getElementById("addquote").checked;
+        let outputText = "";
+
+        if (addquote) {
+          // 如果 addquote 为 true,在每个元素前后加上引号
+          outputText = inputlist.map((item) => `"${item}",`).join("\n");
+        } else {
+          // 如果 addquote 为 false,一行一个元素
+          outputText = inputlist.join("\n");
         }
-        function converttime2stamp(){
-            let inputtime = $("#inputtime").val();
-            let output = time2stamp(inputtime);
-            console.log(inputtime, "->>", output);
-            $("#outputstamp").val(output);
-            let s = inputtime+" -> " +output;
-            addrec(s);
-        }
-        function zerotime(){
-            let inputtime = $("#inputtime").val();
-            let zerotime = time2zerotime(inputtime);
-            $("#inputtime").val(zerotime);
-            converttime2stamp();
-        }
-        function addrec(s){
-            arr.push(s);
-            showrec();
-        }
-        function showrec(){
-            let newarr = [...arr].reverse();
-            let msgstr = newarr.join("\n");
-            console.log(msgstr);
-            $("#showtxt").val(msgstr);
-        }
-         
+
+        return outputText;
+      }
+
+      // 定义函数，从 textarea 中读取数据并转换为数组
+      function getListFromTextArea(textareaElement) {
+        return [
+          ...new Set(
+            textareaElement.value
+              .trim()
+              .split("\n")
+              .map((item) => item.trim().replace(/,$/, ""))
+          ),
+        ];
+      }
+
+      // 计算集合操作
+      function calculateSetOperations() {
+        const leftArr = getListFromTextArea(leftList);
+        const rightArr = getListFromTextArea(rightList);
+
+        // 计算交集
+        const intersectionArr = leftArr.filter((item) =>
+          rightArr.includes(item)
+        );
+        jiaoji.value =list2txt( intersectionArr);
+        jiaojispanElement.textContent = intersectionArr.length;
+
+        // 计算左边独有
+        const leftOnlyArr = leftArr.filter((item) => !rightArr.includes(item));
+        lefthave.value = list2txt( leftOnlyArr);
+        lefthavespanElement.textContent = leftOnlyArr.length;
+
+        // 计算右边独有
+        const rightOnlyArr = rightArr.filter((item) => !leftArr.includes(item));
+        righthave.value = list2txt(rightOnlyArr);
+        righthavespanElement.textContent = rightOnlyArr.length;
+
+        // 计算合集
+        const unionArr = [...new Set([...leftArr, ...rightArr])];
+        heji.value = list2txt(unionArr);
+        hejispanElement.textContent = unionArr.length;
+      }
     </script>
-
-</body>
-
+  </body>
 </html>
