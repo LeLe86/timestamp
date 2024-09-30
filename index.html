@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <title>Timestamp Convertor</title>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/vue/3.2.47/vue.global.min.js"></script>
+
     <link
       href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"
       rel="stylesheet"
@@ -303,6 +305,91 @@
         heji.value = list2txt(unionArr);
         hejispanElement.textContent = unionArr.length;
       }
+    </script>
+	
+	
+	
+	
+	<div id="mainbody2" style="width:900px; margin:0 auto">
+	<h2>网址参数简化小工具</h2>
+	<p>输入网址，点“解析”，点每个参数后面的“选择”，下面文本框中会生成带有对应参数的新网址。</p>
+        网址<input type="text" v-model="url1" style="width: 500px" />
+        <button class="btn btn-primary"  style="margin-left: 10px;"
+            @click="url1toDict()">解析</button>
+        <table   style="max-width: 1200px;margin-left:10px">
+            <tr style="font-weight: bold;line-height: 50px;">
+                <td>属性</td>
+                <td>数值</td>
+                <td>选择</td>
+            </tr>
+
+
+            <tr v-for="(v,k) in d1 " style="word-wrap: break-word;border-bottom:1px solid #ccc" :key="k" >
+                <td style="max-width: 200px;font-weight:bold;">{{ k }}</td>
+                <td  style="padding-left:8px;max-width:800px;">{{ v }}</td>
+                <td>
+                    <input type="checkbox" class="btn-check"  v-model="seld1" :id="'cknum'+ k" :value="k" />
+                    <label class="btn btn-outline-primary btn-sm" :for="'cknum' + k">选择</label><br>
+                </td>
+            </tr>
+
+
+
+        </table>
+        <br>
+        <textarea cols="70" rows="7"  style="margin-left:10px" >{{newurl1}}</textarea>
+
+    </div>
+    <script>
+        function url2dict(url2) {
+		let url = url2.replace(/&amp;/g,"&");
+		console.log("newurl=",url);
+            const searchParams = new URLSearchParams(url.split("?")[1]);
+
+            const queryDict = {};
+            searchParams.forEach((value, key) => {
+                queryDict[key] = value;
+            });
+            return queryDict
+        }
+    </script>
+    <script>
+        var obj = {
+
+            data() {
+                return {
+                    url1: "http://mp.weixin.qq.com/s?__biz=MzkzMDQ2MDAyOA==&amp;mid=2247484189&amp;idx=1&amp;sn=e534d459f0f0ba8fe8683c6446ec688e&amp;chksm=c278bb0ef50f3218a38a8d823ddde628d19c8e58228bffda948c105e4269b818e4003720de29#rd",
+                    pre1: "",
+                    seld1: [],
+                    d1: "",
+
+
+                }
+            },
+            methods: {
+                url1toDict: function () {
+                    this.d1 = url2dict(this.url1);
+                    this.pre1 = this.url1.split("?")[0];
+                }
+
+            },
+            computed: {
+                // 一个计算属性的 getter
+                newurl1() {
+                    let url = this.pre1.toString();
+
+                    let arr = []
+                    for (let k in this.seld1) {
+                        arr.push(this.seld1[k] + "=" + this.d1[this.seld1[k]])
+
+                    }
+                    let ext = arr.join("&");
+                    return url + "?" + ext;
+                }
+            }
+        }
+
+        Vue.createApp(obj).mount("#mainbody2");
     </script>
   </body>
 </html>
